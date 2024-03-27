@@ -1,4 +1,5 @@
 import copy
+import tqdm
 
 
 def part1():
@@ -66,10 +67,39 @@ def propagate(grid, energized, direction_hist, start_x, start_y, direction):
             return
 
 
-
 def part2():
-    pass
+    file = open("input.txt", "r")
+
+    grid = []
+    for line in file:
+        line = line.replace("\n", "")
+        grid.append([char for char in line])
+
+    max_energized = 0
+    for col in tqdm.tqdm(range(len(grid[0]))):
+        energized = []
+        direction_hist = []
+        propagate(grid, energized, direction_hist, col, 0, "down")
+        if len(energized) > max_energized:
+            max_energized = len(energized)
+        energized = []
+        direction_hist = []
+        propagate(grid, energized, direction_hist, col, 0, "up")
+        if len(energized) > max_energized:
+            max_energized = len(energized)
+    for row in tqdm.tqdm(range(len(grid))):
+        energized = []
+        direction_hist = []
+        propagate(grid, energized, direction_hist, 0, row, "right")
+        if len(energized) > max_energized:
+            max_energized = len(energized)
+        energized = []
+        direction_hist = []
+        propagate(grid, energized, direction_hist, 0, row, "left")
+        if len(energized) > max_energized:
+            max_energized = len(energized)
+    print(max_energized)
 
 
 if __name__ == "__main__":
-    part1()
+    part2()
